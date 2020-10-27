@@ -2,19 +2,21 @@
 import os
 import shutil
 import random
-tar_path = '/media/hzh/ssd_disk/Traffic/traffic_split_data_1208_1301_1345_by1213'
-dst_path = '/media/hzh/ssd_disk/Traffic/lane_data_1219'
+tar_path = '/media/hzh/项目管理组-王泳麟/helmet_dataset/QRdistort20200421_done/train'#图片源文件夹
+dst_path = '/media/hzh/项目管理组-王泳麟/helmet_dataset/QRdistort20200421_done/test'#目标文件夹
+select_ratio = 0.2#采样率
 
 copy_cnt = 0
 
 def save_images_to_target_folder(images, input_path, output_path):
     images1 = images.copy()
-    images1 = random.sample(images1,int(len(images1)*0.4))
+    images1 = random.sample(images1,int(len(images1)*select_ratio))
     for input_image in images1:
         # folder,filename = os.path.split(input_images)
         output_image = input_image.replace(input_path,output_path)
-        os.makedirs(os.path.split(output_image)[0],exist_ok=True)
-        shutil.copy(input_image,output_image)
+        # os.makedirs(os.path.split(output_image)[0],exist_ok=True)
+        # shutil.move(input_image,output_image)
+        # shutil.move(input_image.replace('.jpg','.xml'), output_image.replace('.jpg','.xml'))
         print('copy {} to {}'.format(input_image,output_image))
         global copy_cnt
         copy_cnt += 1
@@ -35,6 +37,7 @@ def search_all_images(input_path, output_path):
         if len(images) > 1024:
             save_images_to_target_folder(images,input_path,output_path)
             images.clear()
+    save_images_to_target_folder(images, input_path, output_path)
     return images
 
 

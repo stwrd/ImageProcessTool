@@ -56,8 +56,8 @@ def convert_annotation(img_filename,xml_file_name):
 
 if __name__ == '__main__':
 
-    img_path = r'/media/hzh/ssd_disk/Traffic/lane_done/lane_data1221done'
-    xml_path = r'/media/hzh/ssd_disk/Traffic/lane_done/lane_data1221done'
+    img_path = r'/media/hzh/work/workspace/yolov3-line_detect/data/coco'
+    xml_path = r'/media/hzh/work/workspace/yolov3-line_detect/data/coco'
     suffix = '.jpg'
 
     img_file_list = os.listdir(img_path)

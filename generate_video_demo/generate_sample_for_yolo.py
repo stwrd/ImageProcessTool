@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import numba
 start_idx = 1
-PREDEFINE_LEN = 36
+PREDEFINE_LEN = 12
 
 class generating:
     def __init__(self, path, label_path, dst_dir):
@@ -30,13 +30,13 @@ class generating:
         B = np.zeros_like(img_list[0])
         G = np.zeros_like(img_list[0])
         R = np.zeros_like(img_list[0])
-        for i in range(3):
-            B += img_list[i*4]
-            G += img_list[i*4+12]
-            R += img_list[i*4+24]
-        B = B/3.0
-        G = G/3.0
-        R = R/3.0
+        for i in range(4):
+            B += img_list[i]
+            G += img_list[i+PREDEFINE_LEN//3]
+            R += img_list[i+PREDEFINE_LEN*2//3]
+        B = B/4.0
+        G = G/4.0
+        R = R/4.0
 
         standard_with = B.shape[1]
         standard_height = B.shape[0]
@@ -50,27 +50,32 @@ class generating:
         #    cv2.rectangle(bgr_img,(label[0],label[1]),(label[2],label[3]),(255,0,0),2)
         cv2.imwrite(dst_path,bgr_img)
 
-        middle_x = (labels[:,0] + labels[:,2])/2
-        middle_y = (labels[:,1] + labels[:,3])/2
-        labels[:,2] = labels[:,2] - labels[:,0]
-        labels[:,3] = labels[:,3] - labels[:,1]
-        labels[:,0] = middle_x
-        labels[:,1] = middle_y
-        labels[:,[0,2]] /= standard_with
-        labels[:,[1,3]] /= standard_height
+        if labels is not None:
+            middle_x = (labels[:,0] + labels[:,2])/2
+            middle_y = (labels[:,1] + labels[:,3])/2
+            labels[:,2] = labels[:,2] - labels[:,0]
+            labels[:,3] = labels[:,3] - labels[:,1]
+            labels[:,0] = middle_x
+            labels[:,1] = middle_y
+            labels[:,[0,2]] /= standard_with
+            labels[:,[1,3]] /= standard_height
 
-        add_cls = np.zeros([labels.shape[0],1],np.int32)
-        labels = np.concatenate((add_cls,labels),axis=1)
-        dst_label_path = dst_path.replace('.jpg','.txt')
-        with open(dst_label_path,'w') as outfile:
-            for label in labels:
-                outfile.write('{} {:.4} {:.4} {:.4} {:.4}\n'.format(int(label[0]),label[1],label[2],label[3],label[4]))
+            add_cls = np.zeros([labels.shape[0],1],np.int32)
+            labels = np.concatenate((add_cls,labels),axis=1)
+            dst_label_path = dst_path.replace('.jpg','.txt')
+            with open(dst_label_path,'w') as outfile:
+                for label in labels:
+                    outfile.write('{} {:.4} {:.4} {:.4} {:.4}\n'.format(int(label[0]),label[1],label[2],label[3],label[4]))
+        else:
+            dst_label_path = dst_path.replace('.jpg', '.txt')
+            out_file = open(dst_label_path, 'w')
+            out_file.close()
 
     def start(self):
+        global start_idx
         if os.path.exists(self.label_path) or os.path.exists(self.label_path_cls):
             video_cap = cv2.VideoCapture(self.Path)
             frame_list = []
-            global start_idx
             cur_idx = 0
             while True:
                 is_read,img = video_cap.read()
@@ -89,11 +94,29 @@ class generating:
                         cur_idx += 1
                 else:
                     break
+        else:
+            video_cap = cv2.VideoCapture(self.Path)
+            frame_list = []
+            cur_idx = 0
+            while True:
+                is_read,img = video_cap.read()
+                if is_read:
+                    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    gray = gray.astype(np.float32)
+                    frame_list.append(gray)
+                    if len(frame_list) == PREDEFINE_LEN:
+                        labels = None
+                        self.generate_single_sample(frame_list,labels)
+                        start_idx = start_idx + 1
+                        frame_list = frame_list[12:]
+                        cur_idx += 12
+                else:
+                    break
 
 if __name__ == '__main__':
-    tar_path = r'/media/hzh/ssd_disk/打架标注数据/fight_data20191114done/fight'
-    label_path = r'/media/hzh/ssd_disk/打架标注数据/fight_data20191114done/fight_label'
-    dst_dir = r'/media/hzh/work/workspace/data/fighting_data/dj'
+    tar_path = r'/media/hzh/docker_disk/dataset/data_throw/throw_neg/video/1'
+    label_path = r'/media/hzh/docker_disk/dataset/data_throw/throw_neg/video_label'
+    dst_dir = r'/media/hzh/docker_disk/dataset/data_throw/throw_neg'
 
     sub_video_list = os.listdir(tar_path)
     suffix = '.mp4'

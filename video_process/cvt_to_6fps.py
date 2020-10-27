@@ -8,8 +8,8 @@ import shutil
 if __name__ == '__main__':
     # tar_path = sys.argv[1]
     # dst_path = sys.argv[2]
-    tar_path = '/media/hzh/work/workspace/data/fighting_data/dj'
-    dst_path = '/media/hzh/work/workspace/data/fighting/Anomaly-Videos-6fps'
+    tar_path = '/media/hzh/docker_disk/dataset/data_throw/throw_neg/video'
+    dst_path = '/media/hzh/docker_disk/dataset/data_throw/throw_neg/video-6fps'
     os.makedirs(dst_path,exist_ok=True)
     for sub_folder in os.listdir(tar_path):
         full_sub_floder = os.path.join(tar_path, sub_folder)

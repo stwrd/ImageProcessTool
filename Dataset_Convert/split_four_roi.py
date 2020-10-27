@@ -29,8 +29,8 @@ def isvalid_symbol(code):
     else:
         return False
 
-father_folder = r'H:\交通\1344_超速'
-dst_folder = r'H:\新的交通\1344_超速'
+father_folder = r'/media/hzh/work/data/7.13测试数据/百色数据-7.13整理/1625'
+dst_folder = r'/media/hzh/work/data/7.13测试数据/百色数据-7.13整理/1625_new'
 
 path_list = os.listdir(father_folder)
 for sub_path in path_list:
@@ -41,7 +41,7 @@ for sub_path in path_list:
     idx = 1
     for filename in filename_list:
         big_img = Image.open(filename)
-        images = split_img(big_img,grid=(1,2))
+        images = split_img(big_img,grid=(1,1))
 
         folder,name = os.path.split(filename)
         basename = os.path.splitext(name)[0]
@@ -60,7 +60,7 @@ for sub_path in path_list:
                     new_basename = new_basename.replace(target_str,'null_')
                     invalid_len = 0
 
-        str_dict = ['_a','_b','_c','_d']
+        str_dict = ['_1','_2','_3','_4']
         for i,image in enumerate(images):
             new_save_path = os.path.join(new_path,new_basename+str_dict[i]+'.jpg')
             print(idx,' save to ',new_save_path)

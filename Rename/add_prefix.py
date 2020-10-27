@@ -13,8 +13,17 @@ def add_prefix_to_files(target_folder,prefix=''):
         shutil.move(old_filename,new_filename)
         print('rename {} to {}'.format(old_filename,new_filename))
 
+def add_postfix_to_files(target_folder, postfix=''):
+    filelist = os.listdir(target_folder)
+    new_filelist = ['{}_{}.jpg'.format(os.path.splitext(filename)[0], postfix) for filename in filelist]
+    full_filelist = [os.path.join(target_folder, filename) for filename in filelist]
+    full_new_filelist = [os.path.join(target_folder, filename) for filename in new_filelist]
+    for old_filename, new_filename in zip(full_filelist, full_new_filelist):
+        shutil.move(old_filename, new_filename)
+        print('rename {} to {}'.format(old_filename, new_filename))
+
 
 if __name__ == '__main__':
     target_folder = sys.argv[1]
     target_prefix = sys.argv[2]
-    add_prefix_to_files(target_folder,prefix=target_prefix)
+    add_postfix_to_files(target_folder,postfix=target_prefix)

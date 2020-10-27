@@ -4,7 +4,7 @@ import numpy as np
 import shutil
 from PIL import Image
 from PIL import ImageFile
-str_dict = ['_a','_b','_c','_d']
+str_dict = ['_1','_2','_3','_4']
 def split_img(big_img, grid = (2,2)):
     stride_y = big_img.height/grid[1]#图像的步进
     stride_y = np.floor(stride_y).astype('int')
@@ -27,7 +27,7 @@ def isvalid_symbol(code):
     else:
         return False
 tar_path = '/media/hzh/work/data/wuxi_new_data1'
-dst_path = '/media/hzh/ssd_disk/Traffic/split_data_1213_1'
+dst_path = '/media/hzh/docker_disk/dataset/traffic'
 
 
 # tar_path = '/media/hzh/No.7/全国一百支队违法数据/sample200'
@@ -43,8 +43,33 @@ for subfolder1 in subfolders1:
             if os.path.isdir(full_path):
                 filenames = os.listdir(full_path)
                 os.makedirs(os.path.join(dst_path, os.path.split(subfolder2)[1]), exist_ok=True)
+                # 使用设备号对相同场景进行过滤
+                sbbh = ''
+                wfxh = ''
+                step_num = 100#设备号相同时，每隔step_num张取一张
+                cur_num = 0
                 for filename in filenames:
+                    old_name = os.path.join(full_path, filename)
+                    if os.path.isdir(old_name):
+                        continue
+                    print('process ',old_name)
                     basename = os.path.splitext(filename)[0]
+                    split_names = basename.split('_')
+                    if len(split_names) < 2:
+                        continue
+                    tmp_sbbh,tmp_wfxh = split_names[0],split_names[1]
+                    if sbbh == tmp_sbbh or wfxh == tmp_wfxh:
+                        sbbh = tmp_sbbh
+                        wfxh = tmp_wfxh
+                        if cur_num %step_num == 0:
+                            cur_num = 0
+                            continue
+                        else:
+                            cur_num += 1
+                    else:
+                        sbbh = tmp_sbbh
+                        wfxh = tmp_wfxh
+                        cur_num = 0
                     new_basename = basename
                     target_str = None
                     invalid_len = 0
@@ -59,11 +84,6 @@ for subfolder1 in subfolders1:
                             if invalid_len != 0:
                                 new_basename = new_basename.replace(target_str, 'null_')
                                 invalid_len = 0
-
-                    old_name = os.path.join(full_path, filename)
-                    if os.path.isdir(old_name):
-                        continue
-                    print('process ',old_name)
                     if subfolder3 == 'dantu1' or subfolder3 == 'dantu2' or subfolder3 == 'dantu3':
                         new_name = os.path.join(dst_path, os.path.split(subfolder2)[1], new_basename + '.jpg')
                         if len(filenames) > 300:

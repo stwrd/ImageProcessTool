@@ -1,10 +1,22 @@
 import os
 import cv2
-
-tar_path = '/media/hzh/work/workspace/py_smoke_call_train/roi_data_train_square/call'
-filenames = os.listdir(tar_path)
-for filename in filenames:
-    full_filename = os.path.join(tar_path,filename)
-    img = cv2.imread(full_filename, cv2.IMREAD_COLOR)
-    if img is None:
-        print(full_filename)
+from pathlib import Path
+import shutil
+#检测目录下的图片是否损坏，若损坏，则移至垃圾箱
+#trash
+tar_path = '/media/hzh/docker_disk/dataset/data_throw/data'
+trash_path = '/media/hzh/docker_disk/dataset/data_throw/trash'
+os.makedirs(trash_path,exist_ok=True)
+pattern_list = ['*.jpg','*.png']
+cnt = 0
+for pattern_str in pattern_list:
+    filenames = Path(tar_path).rglob(pattern_str)
+    with open(os.path.join('/media/hzh/ssd_disk','trash_remove_list.txt'),'a') as f:
+        for filename in filenames:
+            cnt+=1
+            img = cv2.imread(str(filename), cv2.IMREAD_COLOR)
+            if img is None:
+                print(str(filename))
+                shutil.move(filename, os.path.join(trash_path,filename.name) )
+                f.write(str(filename)+'\n')
+print('total images num :',cnt)
