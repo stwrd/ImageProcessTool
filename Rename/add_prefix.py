@@ -26,4 +26,4 @@ def add_postfix_to_files(target_folder, postfix=''):
 if __name__ == '__main__':
     target_folder = sys.argv[1]
     target_prefix = sys.argv[2]
-    add_postfix_to_files(target_folder,postfix=target_prefix)
+    add_prefix_to_files(target_folder,prefix=target_prefix)

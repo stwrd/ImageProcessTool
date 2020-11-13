@@ -2,8 +2,10 @@ import os
 import cv2
 import numpy as np
 import numba
-start_idx = 1
-PREDEFINE_LEN = 12
+import shutil
+start_idx = 3342
+PREDEFINE_LEN = 36
+folder_num = 1
 
 class generating:
     def __init__(self, path, label_path, dst_dir):
@@ -30,13 +32,24 @@ class generating:
         B = np.zeros_like(img_list[0])
         G = np.zeros_like(img_list[0])
         R = np.zeros_like(img_list[0])
-        for i in range(4):
-            B += img_list[i]
-            G += img_list[i+PREDEFINE_LEN//3]
-            R += img_list[i+PREDEFINE_LEN*2//3]
-        B = B/4.0
-        G = G/4.0
-        R = R/4.0
+        throw = False
+        fight = True
+        if throw:
+            for i in range(4):
+                B += img_list[i]
+                G += img_list[i+PREDEFINE_LEN//3]
+                R += img_list[i+PREDEFINE_LEN*2//3]
+            B = B/4.0
+            G = G/4.0
+            R = R/4.0
+        if fight:
+            for i in range(4):
+                B += img_list[i*3]
+                G += img_list[i*3+PREDEFINE_LEN//3]
+                R += img_list[i*3+PREDEFINE_LEN*2//3]
+            B = B/4.0
+            G = G/4.0
+            R = R/4.0
 
         standard_with = B.shape[1]
         standard_height = B.shape[0]
@@ -45,6 +58,13 @@ class generating:
         dst_path = os.path.join(dst_dir,'data','%05d.jpg' %start_idx)
         if not os.path.exists(os.path.join(dst_dir,'data')):
             os.makedirs(os.path.join(dst_dir,'data'))
+        else:
+            file_list = os.listdir(os.path.join(dst_dir,'data'))
+            if(len(file_list) > 2000):
+                global folder_num
+                os.renames(os.path.join(dst_dir,'data'),os.path.join(dst_dir,'data{}'.format(folder_num)))
+                os.makedirs(os.path.join(dst_dir, 'data'))
+                folder_num = folder_num + 1
 
         #for label in labels:
         #    cv2.rectangle(bgr_img,(label[0],label[1]),(label[2],label[3]),(255,0,0),2)
@@ -114,9 +134,9 @@ class generating:
                     break
 
 if __name__ == '__main__':
-    tar_path = r'/media/hzh/docker_disk/dataset/data_throw/throw_neg/video/1'
-    label_path = r'/media/hzh/docker_disk/dataset/data_throw/throw_neg/video_label'
-    dst_dir = r'/media/hzh/docker_disk/dataset/data_throw/throw_neg'
+    tar_path = r'/media/hzh/ssd_disk/打架标注数据/tmp'
+    label_path = r'/media/hzh/ssd_disk/打架标注数据/tmp_label'
+    dst_dir = r'/media/hzh/docker_disk/dataset/data_fight/fight_data_step1'
 
     sub_video_list = os.listdir(tar_path)
     suffix = '.mp4'

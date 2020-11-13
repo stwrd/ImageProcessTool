@@ -6,8 +6,8 @@ import sys
 import batch_rename_to_int
 import file_and_folder_ops
 if __name__ == '__main__':
-    folder_list = ['/media/hzh/ssd_disk/smoke_and_call/标注数据-人头检测/chtx']
-    dst_folder = '/media/hzh/ssd_disk/smoke_and_call/traindata_step2'
+    folder_list = ['/media/hzh/docker_disk/dataset/traffic/src']
+    dst_folder = '/media/hzh/docker_disk/dataset/traffic/images'
     total_folders = []
     for folder in folder_list:
         total_folders = total_folders + file_and_folder_ops.search_all_folder(folder)

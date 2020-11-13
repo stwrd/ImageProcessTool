@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 
-start_idx = 1
+start_idx = 3758
 PREDEFINE_LEN = 36
 
 class generating:
@@ -86,9 +86,9 @@ class generating:
                     break
 
 if __name__ == '__main__':
-    tar_path = r'/media/hzh/ssd_disk/打架标注数据/fight_data20191114done/fight'
-    label_path = r'/media/hzh/ssd_disk/打架标注数据/fight_data20191114done/fight_label'
-    dst_dir = r'/media/hzh/work/workspace/data/fighting_data/dj'
+    tar_path = r'/media/hzh/ssd_disk/打架标注数据/fight/sp'
+    label_path = r'/media/hzh/ssd_disk/打架标注数据/fight/sp_label'
+    dst_dir = r'/media/hzh/docker_disk/dataset/data_fight/fight_data_step2'
 
     sub_video_list = os.listdir(tar_path)
     suffix = '.mp4'

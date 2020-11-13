@@ -45,7 +45,7 @@ def check_labels_in_folder(input_path):
     return total_labels
 
 if __name__ == '__main__':
-    input_path = '/media/hzh/ssd_disk/深铁/ST/UAV20200917done'
+    input_path = '/media/hzh/docker_disk/dataset/traffic/Annotations'
     labels = check_labels_in_folder(input_path)
     # folders = search_all_folder(input_path)
     # total_labels = {}
