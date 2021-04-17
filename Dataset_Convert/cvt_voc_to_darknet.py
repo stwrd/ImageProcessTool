@@ -9,22 +9,22 @@ import sys
 # classes = ["people","s_smoke","s_phone","smoke","smoke_phone","phone"]
 # classes = ["excavator","crane","rig","driver"] #挖掘机，起重机，钻机，打桩机
 # classes = ['zebra crossing','left turn', 'right turn','straight','straight&left','straight&right','u-turn']
-# classes = ["vehicle","belt","phone","people"]
-classes = ["car",
-"truck",
-"bus",
-"non_motor",
-"people",
-"motor",
-"plate",
-"straight",
-"straight_r",
-"straight_l",
-"right",
-"left",
-"stop_line",
-"zebra",
-"road_block"]
+classes = ["vehicle","belt","phone","people"]  #开车不系安全带和打手机
+# classes = ["car",
+# "truck",
+# "bus",
+# "non_motor",
+# "people",
+# "motor",
+# "plate",
+# "straight",
+# "straight_r",
+# "straight_l",
+# "right",
+# "left",
+# "stop_line",
+# "zebra",
+# "road_block"]
 
 def convert(size, box):
     dw = 1./(size[0])
@@ -124,9 +124,9 @@ def check_labels_in_folder(input_path):
 
 import json
 if __name__ == '__main__':
-    img_path = '/media/hzh/docker_disk/dataset/traffic/data'
+    img_path = '/media/hzh/ssd_disk/spd_data/Sbelt_phone20200703_2done'
     pattern_list = ['*.jpg', '*.png']
-    with open('/media/hzh/docker_disk/dataset/traffic/error_list.txt','w') as f:
+    with open('/media/hzh/ssd_disk/spd_data/error_list.txt','w') as f:
         for pattern_str in pattern_list:
             filenames = Path(img_path).rglob(pattern_str)
             for img_filename in filenames:

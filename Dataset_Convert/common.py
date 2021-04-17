@@ -33,6 +33,7 @@ def check_voc_label(xml_path):
                 #     labels.append(cls)
     return labels
 
+#检测文件夹下的所有xml标注文件中的标签
 def check_labels_in_folder(input_path):
     total_labels = {}
     for xml_path in Path(input_path).rglob('*.xml'):
@@ -44,9 +45,39 @@ def check_labels_in_folder(input_path):
                 total_labels[key] = labels[key]
     return total_labels
 
+def convert(str,rows):
+    num = len(str)
+    cols = (num//(2*rows-2))*(rows-1)+(rows-1)
+    str_arr = np.zeros([rows,cols],dtype=np.str)
+    flag = rows-1
+    r_mode = True
+    i,j = 0,0
+    for s in str:
+        flag -= 1
+        str_arr[i, j] = s
+        if r_mode:
+            i += 1
+        else:
+            i -= 1
+            j += 1
+        if flag == 0:
+            r_mode = not r_mode
+            flag = rows-1
+    str_resort = ''
+    for i in range(rows):
+        for j in range(cols):
+            if str_arr[i,j] != '':
+                str_resort += str_arr[i,j]
+    return str_resort
+
+
 if __name__ == '__main__':
-    input_path = '/media/hzh/docker_disk/dataset/traffic/Annotations'
+    str = '12345678'
+    convert(str,3)
+
+    input_path = '/media/hzh/docker_disk/dataset/深铁/车载巡检/CZXJonline20200413_done'
     labels = check_labels_in_folder(input_path)
+
     # folders = search_all_folder(input_path)
     # total_labels = {}
     # for folder in folders:

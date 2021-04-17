@@ -26,10 +26,11 @@ def isvalid_symbol(code):
         return True
     else:
         return False
-tar_path = '/media/hzh/work/data/wuxi_new_data1'
-dst_path = '/media/hzh/docker_disk/dataset/traffic'
+tar_path = '/media/hzh/work/data/wuxi_new_data'
+dst_path = '/media/hzh/docker_disk/dataset/traffic/src2'
 
-
+process_num = 0
+select_prob = 1.1 #选择的概率
 # tar_path = '/media/hzh/No.7/全国一百支队违法数据/sample200'
 subfolders1 = [ os.path.join(tar_path,subfolder) for subfolder in os.listdir(tar_path) if os.path.isdir(os.path.join(tar_path,subfolder))]
 for subfolder1 in subfolders1:
@@ -46,13 +47,12 @@ for subfolder1 in subfolders1:
                 # 使用设备号对相同场景进行过滤
                 sbbh = ''
                 wfxh = ''
-                step_num = 100#设备号相同时，每隔step_num张取一张
+                step_num = 10#设备号相同时，每隔step_num张取一张
                 cur_num = 0
                 for filename in filenames:
                     old_name = os.path.join(full_path, filename)
                     if os.path.isdir(old_name):
                         continue
-                    print('process ',old_name)
                     basename = os.path.splitext(filename)[0]
                     split_names = basename.split('_')
                     if len(split_names) < 2:
@@ -70,6 +70,8 @@ for subfolder1 in subfolders1:
                         sbbh = tmp_sbbh
                         wfxh = tmp_wfxh
                         cur_num = 0
+                    print('process ',old_name)
+                    process_num += 1
                     new_basename = basename
                     target_str = None
                     invalid_len = 0
@@ -87,13 +89,13 @@ for subfolder1 in subfolders1:
                     if subfolder3 == 'dantu1' or subfolder3 == 'dantu2' or subfolder3 == 'dantu3':
                         new_name = os.path.join(dst_path, os.path.split(subfolder2)[1], new_basename + '.jpg')
                         if len(filenames) > 300:
-                            if np.random.random() < 0.1:
+                            if np.random.random() < select_prob:
                                 shutil.copy(old_name,new_name)
                         else:
                             shutil.copy(old_name, new_name)
                     elif subfolder3 == 'shang2xia2':
                         if len(filenames) > 100:
-                            if np.random.random() < 0.1:
+                            if np.random.random() < select_prob:
                                 try:
                                     big_img = Image.open(old_name)
                                 except IOError:
@@ -115,7 +117,7 @@ for subfolder1 in subfolders1:
                                     img.save(new_name)
                     elif subfolder3 == 'zuo1you1':
                         if len(filenames) > 100:
-                            if np.random.random() < 0.1:
+                            if np.random.random() < select_prob:
                                 try:
                                     big_img = Image.open(old_name)
                                 except IOError:
@@ -137,7 +139,7 @@ for subfolder1 in subfolders1:
                                     img.save(new_name)
                     elif subfolder3 == 'shang1xia1':
                         if len(filenames) > 100:
-                            if np.random.random() < 0.1:
+                            if np.random.random() < select_prob:
                                 try:
                                     big_img = Image.open(old_name)
                                 except IOError:
@@ -160,7 +162,7 @@ for subfolder1 in subfolders1:
                                     img.save(new_name)
                     elif subfolder3 == 'heng3he1':
                         if len(filenames) > 100:
-                            if np.random.random() < 0.3:
+                            if np.random.random() < select_prob:
                                 try:
                                     big_img = Image.open(old_name)
                                 except IOError:
@@ -183,7 +185,7 @@ for subfolder1 in subfolders1:
                                     img.save(new_name)
                     elif subfolder3 == 'shu3he1':
                         if len(filenames) > 100:
-                            if np.random.random() < 0.3:
+                            if np.random.random() < select_prob:
                                 try:
                                     big_img = Image.open(old_name)
                                 except IOError:
@@ -204,3 +206,4 @@ for subfolder1 in subfolders1:
                                     new_name = os.path.join(dst_path, os.path.split(subfolder2)[1],
                                                             new_basename + str_dict[i] + '.jpg')
                                     img.save(new_name)
+print('total process {} image'.format(process_num))

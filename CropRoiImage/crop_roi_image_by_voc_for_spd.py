@@ -100,8 +100,8 @@ def convert_annotation(img_filename,xml_file_name,dst_path,limit_size=(32,32)):
                     if roi_img.shape[0] > 0 and roi_img.shape[1] > 0:
                         cv2.imwrite(full_name, roi_img)
 if __name__ == '__main__':
-    img_path = '/media/hzh/ssd_disk/spd_data/Sbelt_phone20200615done'
-    dst_path = '/media/hzh/ssd_disk/spd_data/step2'
+    img_path = '/media/hzh/ssd_disk/spd_data/step1/Sbelt_phone20200703_2done'
+    dst_path = '/media/hzh/ssd_disk/spd_data/step3'
     target_cls = ['normal','not_seatbelt','phone','both']
     for c in target_cls:
         sub_dir = os.path.join(dst_path,c)
