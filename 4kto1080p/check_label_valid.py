@@ -3,7 +3,7 @@ import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 if __name__ == '__main__':
-    tar_path = r'H:\mclz\0724_kitchen'
+    tar_path = r'/media/hzh/docker_disk/dataset/traffic/data2/00001'
     filelist = os.listdir(tar_path)
     filelist = [os.path.join(tar_path, filename) for filename in filelist if filename.endswith('.txt')]
     for filename in filelist:

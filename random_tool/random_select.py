@@ -2,8 +2,8 @@
 import os
 import shutil
 import random
-tar_path = '/media/hzh/项目管理组-王泳麟/helmet_dataset/QRdistort20200421_done/train'#图片源文件夹
-dst_path = '/media/hzh/项目管理组-王泳麟/helmet_dataset/QRdistort20200421_done/test'#目标文件夹
+tar_path = '/media/hzh/docker_disk/dataset/smoke_data/step2_bak/people'#图片源文件夹
+dst_path = '/media/hzh/docker_disk/dataset/smoke_data/step2/people_new'#目标文件夹
 select_ratio = 0.2#采样率
 
 copy_cnt = 0
@@ -15,7 +15,7 @@ def save_images_to_target_folder(images, input_path, output_path):
         # folder,filename = os.path.split(input_images)
         output_image = input_image.replace(input_path,output_path)
         # os.makedirs(os.path.split(output_image)[0],exist_ok=True)
-        # shutil.move(input_image,output_image)
+        shutil.copy(input_image,output_image)
         # shutil.move(input_image.replace('.jpg','.xml'), output_image.replace('.jpg','.xml'))
         print('copy {} to {}'.format(input_image,output_image))
         global copy_cnt
@@ -42,5 +42,6 @@ def search_all_images(input_path, output_path):
 
 
 if __name__ == '__main__':
+    os.makedirs(dst_path,exist_ok=True)
     search_all_images(tar_path,dst_path)
     print('total copy:',copy_cnt)

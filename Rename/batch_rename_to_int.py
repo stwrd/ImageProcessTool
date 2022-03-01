@@ -33,8 +33,8 @@ def add_prefix_to_files_by_copy(target_folder, dst_folder, suffix):
     for i,(img_filename,json_filename,xml_filename,txt_filename) in enumerate(zip(img_filelist,json_filelist,xml_filelist,txt_filelist)):
         print('Number:',1+start_idx,' process ',img_filename)
         shutil.copy(img_filename,os.path.join(dst_folder,'{:0=6}{}'.format(1+start_idx, suffix)))
-        if os.path.exists(json_filename):
-            shutil.copy(json_filename,os.path.join(dst_folder,'{:0=6}.json'.format(1+start_idx)))
+        # if os.path.exists(json_filename):
+        #     shutil.copy(json_filename,os.path.join(dst_folder,'{:0=6}.json'.format(1+start_idx)))
         # if os.path.exists(xml_filename):
         #     shutil.copy(xml_filename, os.path.join(dst_folder, '{:0=6}.xml'.format(1+start_idx)))
         if os.path.exists(txt_filename):

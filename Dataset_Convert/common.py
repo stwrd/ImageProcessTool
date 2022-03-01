@@ -75,7 +75,7 @@ if __name__ == '__main__':
     str = '12345678'
     convert(str,3)
 
-    input_path = '/media/hzh/docker_disk/dataset/深铁/车载巡检/CZXJonline20200413_done'
+    input_path = '/media/hzh/ssd_disk/smoke_and_call/标注数据-人头检测'
     labels = check_labels_in_folder(input_path)
 
     # folders = search_all_folder(input_path)

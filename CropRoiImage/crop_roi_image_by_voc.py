@@ -1,4 +1,3 @@
-#获取标注的roi图像
 import xml.etree.ElementTree as ET
 import os
 import glob
@@ -35,24 +34,24 @@ def convert_annotation(img_filename,xml_file_name,dst_path,limit_size=(32,32)):
         for obj in root.iter('object'):
             if ET.iselement(obj.find('bndbox')):
                 cls = obj.find('name').text
-                if cls not in classes:
-                    continue
+                # if cls not in classes or cls != 'phone':
+                #     continue
                 xmlbox = obj.find('bndbox')
                 b = np.array([float(xmlbox.find('xmin').text), float(xmlbox.find('xmax').text), float(xmlbox.find('ymin').text), float(xmlbox.find('ymax').text)]).astype('int')
                 x1,y1,x2,y2 = b[0],b[2],b[1],b[3]
                 center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2
                 box_w = (x2 - x1)
                 box_h = (y2 - y1)
-                if box_w >= 64 and box_h >= 64:
-                    l = max(60, max(box_w, box_h))
-                    x1, y1, x2, y2 = max(int(center_x - np.floor(l * 3 / 4)), 0), max(int(center_y - np.floor(l / 2)),0), \
-                                     min(int(center_x + np.ceil(l * 3 / 4)), img.shape[1]), min(int(center_y + np.ceil(l)),img.shape[0])
+                if box_w >= 30 and box_h >= 30:
+                    l = max(30, max(box_w, box_h))
+                    x1, y1, x2, y2 = max(int(center_x - np.floor(l * 5 / 8)), 0), max(int(center_y - np.floor(l / 2)),0), \
+                                     min(int(center_x + np.ceil(l * 5 / 8)), img.shape[1]), min(int(center_y + l),img.shape[0])
                     # l = max(60, max(box_w, box_h))
                     # x1, y1, x2, y2 = max(int(center_x - np.floor(l * 3 / 4)), 0), max(int(center_y - np.floor(l / 2)),
                     #                                                                   0), min(
                     #     int(center_x + np.ceil(l * 3 / 4)), img.shape[1]), min(int(center_y + l),
                     #                                                            img.shape[0])
-                    # x1, y1, x2, y2 = max(int(center_x - l), 0), max(int(center_y - l), 0), min(int(center_x + l),img.shape[1]), min(int(center_y + l), img.shape[0])
+                    # x1, y1, x2, y2 = max(int(center_x - l/2), 0), max(int(center_y - l/2), 0), min(int(center_x + l/2),img.shape[1]), min(int(center_y + l/2), img.shape[0])
                     roi_img = img[y1:y2,x1:x2]
                     full_name = os.path.join(dst_path,cls,basename + '_%02d' %img_idx + '.jpg')
                     img_idx += 1
@@ -84,7 +83,7 @@ def convert_annotation(img_filename,xml_file_name,dst_path,limit_size=(32,32)):
                     # cv2.imwrite(full_name2, roi_img2)
 
 if __name__ == '__main__':
-    img_path = '/media/hzh/ssd_disk/smoke_and_call/标注数据-人头检测/KSTsp20200909_done'
+    img_path = '/media/hzh/ssd_disk/smoke_and_call/标注数据-人头检测/LXphone20210708done'
     dst_path = '/media/hzh/ssd_disk/smoke_and_call/tmp'
     for c in classes:
         sub_dir = os.path.join(dst_path,c)

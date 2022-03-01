@@ -29,6 +29,6 @@ def cutImageFromFolder(videofolder,savefolder,step=25):
                     break
 
 if __name__ == '__main__':
-    targetfolder = r'/media/hzh/work/workspace/data/data_throw/throw_neg'
-    savefoler = r'/media/hzh/ssd_disk/smoke_and_call/test_video/image'
-    cutImageFromFolder(targetfolder,savefoler,5)
+    targetfolder = r'/home/hzh/抽烟'
+    savefoler = r'/home/hzh/抽烟/images'
+    cutImageFromFolder(targetfolder,savefoler,25)

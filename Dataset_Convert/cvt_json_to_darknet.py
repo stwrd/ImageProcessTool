@@ -20,51 +20,14 @@ def convert(size, box):
 def convert_annotation(img_filename,xml_file_name):
 
     out_name = img_filename.replace(os.path.splitext(img_filename)[1], '.txt')
-
-    if os.path.exists(xml_file_name):
-        with open(xml_file_name) as f:
-            data = json.load(f)
-            w = int(data['imageWidth'])
-            h = int(data['imageHeight'])
-            out_file = open(out_name, 'w')
-            if w == 0 or h == 0:
-                out_file.close()
-                print('invalid json file')
-                return -1
-            for shape in data['shapes']:
-                if shape['shape_type'] != 'rectangle':
-                    print('Skipping shape: label={label}, shape_type={shape_type}'.format(**shape))
-                    continue
-                class_name = shape['label']
-                class_id = classes.index(class_name)
-                pt1, pt2 = shape['points']
-                pt1 = np.array(pt1).astype('int')
-                pt2 = np.array(pt2).astype('int')
-
-                # 调换位置(左上，右下）
-                if pt1[0] > pt2[0]:
-                    pt1[0], pt2[0] = pt2[0], pt1[0]
-                if pt1[1] > pt2[1]:
-                    pt1[1], pt2[1] = pt2[1], pt1[1]
-                if np.sum(np.array([class_id, pt1[0], pt1[1], pt2[0] - pt1[0], pt2[1] - pt1[1]]) < 0) > 0:
-                    print(np.array([class_id, pt1[0], pt1[1], pt2[0] - pt1[0], pt2[1] - pt1[1]]))
-
-                b = np.array([float(pt1[0]), float(pt2[0]), float(pt1[1]), float(pt2[1])]).astype('int')
-                # if (b[1]-b[0] < 16) or (b[3] - b[2] < 16):#过滤过小的目标
-                #     continue
-                bb = convert((w,h), b)
-                if class_id > 0:
-                    out_file.write(str(0) + " " + " ".join([str(a) for a in bb]) + '\n')
-                else:
-                    out_file.write(str(class_id) + " " + " ".join([str(a) for a in bb]) + '\n')
-            out_file.close()
-    else:
-        out_file = open(out_name, 'w')
-        out_file.close()
+    out_file = open(out_name, 'w')
+    bb = [0.5,0.5,1,1]
+    out_file.write(str(0) + " " + " ".join([str(a) for a in bb]) + '\n')
+    out_file.close()
 
 if __name__ == '__main__':
-    img_path = r'/media/hzh/work/workspace/yolov3-line_detect/data/coco'
-    xml_path = r'/media/hzh/work/workspace/yolov3-line_detect/data/coco'
+    img_path = r'/media/hzh/docker_disk/dataset/smoke_data/step2/smoke'
+    xml_path = r'/media/hzh/docker_disk/dataset/smoke_data/step2/smoke'
     suffix = '.jpg'
 
     img_file_list = os.listdir(img_path)

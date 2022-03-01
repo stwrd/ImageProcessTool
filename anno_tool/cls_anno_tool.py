@@ -8,9 +8,9 @@ import time
 
 Name_by_Time = False #是否以时间戳重命名
 Copy_Mode = False  #是否为复制模式，当为False时剪切
-target_folder = '/media/hzh/ssd_disk/Traffic/Dataset/predict/high'
-dst_folder = '/media/hzh/ssd_disk/Traffic/Dataset/new_yx_data'
-classify_names = ['high','middle','low']
+target_folder = '/media/hzh/work/dxx_out'
+dst_folder = '/media/hzh/ssd_disk/Traffic/Dataset/predict/left'
+classify_names = ['left','straight','right','none']
 for name in classify_names:
     os.makedirs(os.path.join(dst_folder,name),exist_ok=True)
 
@@ -88,20 +88,6 @@ if __name__ == '__main__':
                         revert_dst.append(dst_path)
                         do_flag = True
                         break
-                    # if (k == ord('r')):
-                    #     file_num = len(revert_src)
-                    #     print('history num: ', file_num)
-                    #     if (file_num > 0 and (not Copy_Mode)):
-                    #         shutil.move(revert_dst[-1], revert_src[-1])
-                    #         s, d = process(revert_src[-1])
-                    #         revert_dst = revert_dst[:-1]
-                    #         revert_src = revert_src[:-1]
-                    #         revert_src.append(s)
-                    #         revert_dst.append(d)
-                    #         do_flag = True
-                    #         break
-                    #     else:
-                    #         print('not in revert mode')
                 if do_flag:
                     break
                 else:

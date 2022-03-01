@@ -6,27 +6,18 @@ import shutil
 from PIL import Image
 from PIL import ImageFile
 
-def isvalid_symbol(code):
-    if ord(code) >=32 and ord(code) <=122:
-        return True
-    else:
-        return False
-tar_path = '/media/hzh/work/data/wuxi_new_data1'
-dst_path = '/media/hzh/work/data/hcms1'
+def search_all_folder(input_path):
+    totalfolders = []
+    for root,dirs,files in os.walk(input_path):
+        totalfolders.append(root)
+    return totalfolders
+
+tar_path = '/media/hzh/docker_disk/sample200'
+dst_path = '/media/hzh/docker_disk/hcms'
 
 
-subfolders1 = [ os.path.join(tar_path,subfolder) for subfolder in os.listdir(tar_path) if os.path.isdir(os.path.join(tar_path,subfolder))]
-for subfolder1 in subfolders1:
-    subfolders2 = [os.path.join(subfolder1,subfolder) for subfolder in os.listdir(subfolder1) if os.path.isdir(os.path.join(subfolder1,subfolder)) and ('1345' in subfolder or '1208' in subfolder or '1301' in subfolder)]#1345
-    for subfolder2 in subfolders2:
-        print(subfolder2)
-        if '1345' in os.path.split(subfolder2)[1]:
-            # os.makedirs(os.path.join(dst_path, '1345'),exist_ok=True)
-            shutil.copytree(subfolder2, subfolder2.replace(tar_path,dst_path))
-        # if '1301' in os.path.split(subfolder2)[1]:
-        #     os.makedirs(os.path.join(dst_path, '1301'),exist_ok=True)
-        #     shutil.copytree(subfolder2, os.path.join(dst_path, '1301'))
-        # if '1208' in os.path.split(subfolder2)[1]:
-        #     # os.makedirs(os.path.join(dst_path, '1345'),exist_ok=True)
-        #     shutil.copytree(subfolder2, os.path.join(dst_path, '1208'))
-
+subfolders = search_all_folder(tar_path)
+for subfolder in subfolders:
+    if 'dantu' in os.path.split(subfolder)[1]:
+        print('copy {} to {}'.format(subfolder,subfolder.replace(tar_path, dst_path)))
+        shutil.copytree(subfolder, subfolder.replace(tar_path, dst_path))

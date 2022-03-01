@@ -5,11 +5,11 @@ def copy_from_txt(filename,src_folder,target_folder):
     with open(filename,'r') as f:
         for line in f:
             line = line.strip('\n')
-            _,basename = os.path.split(line)
-            basename,postfix = os.path.splitext(basename)
-            target_filename = basename[:-3] + postfix
+            _,target_filename = os.path.split(line)
             os.makedirs(target_folder,exist_ok=True)
-            shutil.copy(os.path.join(src_folder,target_filename),os.path.join(target_folder,target_filename))
+            shutil.copy(os.path.join(src_folder,line),os.path.join(target_folder,target_filename))
 
 if __name__ == '__main__':
-    copy_from_txt('/media/hzh/ssd_disk/spd_data/step2/val.txt','/media/hzh/ssd_disk/spd_data/Sbelt_phone20200615done','/media/hzh/ssd_disk/spd_data/tmp')
+    copy_from_txt('data/test.txt',
+                  '',
+                  'samples')

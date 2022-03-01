@@ -9,7 +9,19 @@ import os
 import numpy as np
 from PIL import Image
 from PIL import ImageFile
+from pathlib import Path
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+split_mode = {'zuo1you1':(2,1),'shang1xia1':(1,2),'shang2xia2':(2,2),'shang3xia3':(3,2),'dantu':(1,1),'shang1zhong1xia1':(1,3)}
+father_folder = r'/media/hzh/docker_disk/dataset/traffic/交通违法第四次标注/待标注数据已分类' #源路径
+dst_folder = r'/media/hzh/docker_disk/dataset/traffic/交通违法第四次标注/test1' #目标路径
+
+def match_hcms(full_path):
+    hcms = (1,1)
+    for key in split_mode:
+        if key in full_path:
+            hcms = split_mode[key]
+    return hcms
 
 def split_img(big_img, grid = (2,2)):
     stride_y = big_img.height/grid[1]#图像的步进
@@ -29,41 +41,39 @@ def isvalid_symbol(code):
     else:
         return False
 
-father_folder = r'/media/hzh/work/data/7.13测试数据/百色数据-7.13整理/1625'
-dst_folder = r'/media/hzh/work/data/7.13测试数据/百色数据-7.13整理/1625_new'
 
-path_list = os.listdir(father_folder)
-for sub_path in path_list:
-    new_path = os.path.join(dst_folder,sub_path)#新的子目录路径
-    os.makedirs(new_path,exist_ok=True)
-    full_path = os.path.join(father_folder,sub_path)
-    filename_list = [os.path.join(full_path,filename) for filename in os.listdir(full_path) if filename.endswith('.jpg')]
-    idx = 1
-    for filename in filename_list:
-        big_img = Image.open(filename)
-        images = split_img(big_img,grid=(1,1))
 
-        folder,name = os.path.split(filename)
-        basename = os.path.splitext(name)[0]
-        new_basename = basename
-        target_str = None
-        invalid_len = 0
-        for c in basename:
-            if not isvalid_symbol(c):
-                if invalid_len == 0:
-                    target_str = c
-                else:
-                    target_str = target_str + c
-                invalid_len += 1
+p_father = Path(father_folder)
+filename_list = p_father.rglob('*.jpg')
+idx = 1
+for filename in filename_list:
+    filename = filename.as_posix()
+    hcms = match_hcms(filename)
+    big_img = Image.open(filename)
+    images = split_img(big_img, grid=hcms)
+
+    folder, name = os.path.split(filename)
+    new_name = name
+    target_str = None
+    invalid_len = 0
+    for c in name:
+        if not isvalid_symbol(c):
+            if invalid_len == 0:
+                target_str = c
             else:
-                if invalid_len != 0:
-                    new_basename = new_basename.replace(target_str,'null_')
-                    invalid_len = 0
+                target_str = target_str + c
+            invalid_len += 1
+        else:
+            if invalid_len != 0:
+                new_name = new_name.replace(target_str, 'null_')
+                invalid_len = 0
+    new_filename = os.path.join(folder,new_name)
 
-        str_dict = ['_1','_2','_3','_4']
-        for i,image in enumerate(images):
-            new_save_path = os.path.join(new_path,new_basename+str_dict[i]+'.jpg')
-            print(idx,' save to ',new_save_path)
-            image.save(new_save_path)
-        idx+=1
+    str_dict = ['_1', '_2', '_3', '_4','_5','_6']
+    for i, image in enumerate(images):
+        new_save_path = new_filename.replace(father_folder,dst_folder).replace('.jpg',str_dict[i]+'.jpg')
+        os.makedirs(os.path.split(new_save_path)[0],exist_ok=True)
+        print(idx, ' save to ', new_save_path)
+        image.save(new_save_path)
+    idx += 1
 
